@@ -2,11 +2,15 @@
 
 //==============================================================================
 MainComponent::MainComponent()
-    : state(Stopped),
+    : juce::AudioAppComponent(otherDeviceManager),
+      state(Stopped),
       openButton("Open"),
       playButton("Play"),
       stopButton("Stop") {
-  setSize(300, 150);
+  otherDeviceManager.initialise(2, 2, nullptr, true);
+  audioSettings.reset(new juce::AudioDeviceSelectorComponent(
+      otherDeviceManager, 0, 2, 0, 2, true, true, true, true));
+  addAndMakeVisible(audioSettings.get());
 
   // Some platforms require permissions to open input channels so request that
   // here
@@ -36,6 +40,8 @@ MainComponent::MainComponent()
 
   formatManager.registerBasicFormats();
   transport.addChangeListener(this);
+
+  setSize(400, 700);
 }
 
 MainComponent::~MainComponent() {
@@ -153,4 +159,5 @@ void MainComponent::resized() {
   openButton.setBounds(10, 10, getWidth() - 20, 30);
   playButton.setBounds(10, 50, getWidth() - 20, 30);
   stopButton.setBounds(10, 90, getWidth() - 20, 30);
+  audioSettings->setBounds(10, 130, getWidth() - 20, 100);
 }

@@ -25,6 +25,9 @@ class MainComponent : public juce::AudioAppComponent,
   void resized() override;
 
  private:
+  juce::AudioDeviceManager otherDeviceManager;
+  std::unique_ptr<juce::AudioDeviceSelectorComponent> audioSettings;
+
   enum TransportState { Stopped, Starting, Stopping, Playing };
 
   TransportState state;
